@@ -2,33 +2,33 @@
 
 HOME_DIR=`pwd`
 PROJECT_NAME=adaptive-services-metrics-consumer-1.0
-SPRINGBOOTAPP_HOME=${HOME_DIR}//target
-SPRINGBOOTAPP_JAR="$SPRINGBOOTAPP_HOME/$PROJECT_NAME.jar"
-LOG="$SPRINGBOOTAPP_HOME/$PROJECT_NAME.log"
+SPRINGBOOTAPP_HOME=${HOME_DIR}/target
+SPRINGBOOTAPP_JAR=$SPRINGBOOTAPP_HOME/$PROJECT_NAME.jar
+LOG=$SPRINGBOOTAPP_HOME/$PROJECT_NAME.log
 
 pid_of_spring_boot() {
-    pgrep -f "java.*$PROJECT_NAME"
+    pgrep -f "java.*${PROJECT_NAME}"
 }
 
 start() {
-    #[ -e "$LOG" ] && cnt=`wc -l "$LOG" | awk '{ print $1 }'` || cnt=1
+    [ -e "$LOG" ] && cnt=`wc -l "$LOG" | awk '{ print $1 }'` || cnt=1
 
-    echo -n $"Starting $PROJECT_NAME: "
+    echo "Starting ${PROJECT_NAME}... "
 
     cd "$SPRINGBOOTAPP_HOME"
-    nohup $SPRINGBOOTAPP_JAVA -jar \"$SPRINGBOOTAPP_JAR\"  > \"$LOG\" 2>&1 &
+    nohup java -jar $SPRINGBOOTAPP_JAR >> $LOG 2>&1 &
 
-    #while { pid_of_spring_boot > /dev/null ; } &&
-        #! { tail --lines=+$cnt "$LOG" | grep -q ' Started \S+ in' ; } ; do
-        #sleep 1
-    #done
+    while { pid_of_spring_boot > /dev/null ; } &&
+        ! { tail -n +$cnt "$LOG" | grep -q ' Started ' ; } ; do
+        sleep 1
+    done
 
     pid_of_spring_boot > /dev/null
     RETVAL=$?
 }
 
 stop() {
-    echo -n "Stopping $PROJECT_NAME: "
+    echo "Stopping $PROJECT_NAME... "
 
     pid=`pid_of_spring_boot`
     [ -n "$pid" ] && kill $pid
@@ -72,6 +72,3 @@ case "$1" in
 esac
 
 exit $RETVAL
-
-#mvn package
-#java -jar target/adaptive-services-metrics-consumer-1.0.jar &
