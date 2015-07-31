@@ -21,10 +21,14 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.jms.annotation.EnableJms;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableJms
-@ImportResource("classpath:app-context.xml")
+@EnableScheduling
+@ImportResource({
+        "classpath:app-context.xml"/*,
+        "classpath:META-INF/spring/applicationContext*.xml"*/})
 public class ActiveMQApplication {
 
     @Autowired

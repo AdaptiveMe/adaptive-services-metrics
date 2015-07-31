@@ -18,16 +18,31 @@ package me.adaptive.core.metrics;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import oshi.SystemInfo;
+import oshi.hardware.HardwareAbstractionLayer;
+import oshi.util.FormatUtil;
 
 @Component
 public class Producer {
 
+    // TODO: import JPA library
+    // TODO: create all the JPA metrics
+    // TODO: send the messages formated with entities
+
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    public void send(String msg) {
+    /*@Autowired
+    AccountRepository accountRepository;*/
 
-        this.jmsTemplate.convertAndSend(msg);
+    @Scheduled(fixedRate = 5000)
+    public void send() {
+
+        SystemInfo si = new SystemInfo();
+        HardwareAbstractionLayer hal = si.getHardware();
+
+        this.jmsTemplate.convertAndSend(FormatUtil.formatBytes(hal.getMemory().getAvailable()));
     }
 }

@@ -4,6 +4,7 @@
 - JDK 1.7+
 - Maven 3+
 - [Apache ActiveMQ](http://activemq.apache.org/getting-started.html) 
+- [adaptive-services-dashbar.jar](https://github.com/AdaptiveMe/adaptive-services-dashbar)
 
 #### Installation & Start consumer
 
@@ -27,6 +28,7 @@
 #### Pre-requisites
 - JDK 1.7+
 - Maven 3+
+- [adaptive-services-dashbar.jar](https://github.com/AdaptiveMe/adaptive-services-dashbar)
 
 #### Installation & Start consumer
 

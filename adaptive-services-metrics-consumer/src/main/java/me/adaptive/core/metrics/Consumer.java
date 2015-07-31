@@ -19,11 +19,20 @@ package me.adaptive.core.metrics;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 @Component
 public class Consumer {
 
+    // TODO: import JPA library
+    // TODO: create all the JPA metrics
+    // TODO: store metrics information on the database
+
+    private static final SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+
     @JmsListener(destination = "adaptive.metrics.queue")
-    public void processMessage(String text) {
-        System.out.println(text);
+    public void processMessage(String message) {
+        System.out.println("{" + format.format(new Date()) + "} " + message);
     }
 }
