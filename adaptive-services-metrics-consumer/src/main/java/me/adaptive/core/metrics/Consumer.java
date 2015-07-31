@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 public class Consumer {
 
     @JmsListener(destination = "adaptive.metrics.queue")
-    public void receiveQueue(String text) {
+    public void processMessage(String text) {
         System.out.println(text);
     }
 }
