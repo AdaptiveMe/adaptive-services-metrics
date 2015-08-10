@@ -16,23 +16,31 @@
 
 package me.adaptive.core.metrics;
 
+import me.adaptive.core.data.domain.MetricBuildEntity;
+import me.adaptive.core.data.domain.MetricServerEntity;
+import me.adaptive.core.data.repo.MetricBuildRepository;
+import me.adaptive.core.data.repo.MetricServerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Component
 public class Consumer {
 
-    // TODO: import JPA library
-    // TODO: create all the JPA metrics
-    // TODO: store metrics information on the database
+    @Autowired
+    private MetricBuildRepository metricBuildRepository;
+    @Autowired
+    private MetricServerRepository metricServerRepository;
 
-    private static final SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+    @JmsListener(destination = "adaptive.metrics.queue.build")
+    public void processBuildMetrics(MetricBuildEntity metric) {
 
-    @JmsListener(destination = "adaptive.metrics.queue")
-    public void processMessage(String message) {
-        System.out.println("{" + format.format(new Date()) + "} " + message);
+        metricBuildRepository.save(metric);
+    }
+
+    @JmsListener(destination = "adaptive.metrics.queue.server")
+    public void processServerMetrics(MetricServerEntity metric) {
+
+        metricServerRepository.save(metric);
     }
 }

@@ -16,14 +16,19 @@
 
 package me.adaptive.core.metrics;
 
+import me.adaptive.core.data.config.JpaConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.jms.annotation.EnableJms;
 
-@SpringBootApplication
 @EnableJms
-@ImportResource("classpath:app-context.xml")
+@Configuration
+@ImportResource({"classpath:app-context.xml"})
+@Import(JpaConfiguration.class)
+@SpringBootApplication
 public class ActiveMQApplication {
 
     public static void main(String[] args) {
