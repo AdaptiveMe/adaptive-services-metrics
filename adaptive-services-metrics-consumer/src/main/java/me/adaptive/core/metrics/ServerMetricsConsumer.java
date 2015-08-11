@@ -16,25 +16,21 @@
 
 package me.adaptive.core.metrics;
 
+import me.adaptive.core.data.domain.MetricServerEntity;
+import me.adaptive.core.data.repo.MetricServerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ImportResource;
-import org.springframework.jms.annotation.EnableJms;
-import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.jms.annotation.JmsListener;
+import org.springframework.stereotype.Component;
 
-@SpringBootApplication
-@EnableJms
-@EnableScheduling
-@ImportResource({
-        "classpath:app-context.xml"/*,
-        "classpath:META-INF/spring/applicationContext*.xml"*/})
-public class ActiveMQApplication {
+@Component
+public class ServerMetricsConsumer {
 
     @Autowired
-    Producer producer;
+    private MetricServerRepository metricServerRepository;
 
-    public static void main(String[] args) {
-        SpringApplication.run(ActiveMQApplication.class, args);
+    @JmsListener(destination = "adaptive.metrics.queue.server")
+    public void processServerMetrics(MetricServerEntity metric) {
+
+        metricServerRepository.save(metric);
     }
 }

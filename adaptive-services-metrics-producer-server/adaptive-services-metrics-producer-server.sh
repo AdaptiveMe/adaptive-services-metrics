@@ -1,7 +1,7 @@
 #!/bin/bash
 
 HOME_DIR=`pwd`
-PROJECT_NAME=adaptive-services-metrics-producer-1.0
+PROJECT_NAME=adaptive-services-metrics-producer-server-1.0
 SPRINGBOOTAPP_HOME=${HOME_DIR}/target
 SPRINGBOOTAPP_JAR=$SPRINGBOOTAPP_HOME/$PROJECT_NAME.jar
 LOG=$SPRINGBOOTAPP_HOME/$PROJECT_NAME.log

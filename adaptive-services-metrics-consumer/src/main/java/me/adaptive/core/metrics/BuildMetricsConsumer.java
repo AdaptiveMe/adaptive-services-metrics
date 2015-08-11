@@ -16,33 +16,21 @@
 
 package me.adaptive.core.metrics;
 
+import me.adaptive.core.data.domain.MetricBuildEntity;
+import me.adaptive.core.data.repo.MetricBuildRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.core.JmsTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
-import oshi.SystemInfo;
-import oshi.hardware.HardwareAbstractionLayer;
-import oshi.util.FormatUtil;
 
 @Component
-public class Producer {
-
-    // TODO: import JPA library
-    // TODO: create all the JPA metrics
-    // TODO: send the messages formated with entities
+public class BuildMetricsConsumer {
 
     @Autowired
-    private JmsTemplate jmsTemplate;
+    private MetricBuildRepository metricBuildRepository;
 
-    /*@Autowired
-    AccountRepository accountRepository;*/
+    @JmsListener(destination = "adaptive.metrics.queue.build")
+    public void processBuildMetrics(MetricBuildEntity metric) {
 
-    @Scheduled(fixedRate = 5000)
-    public void send() {
-
-        SystemInfo si = new SystemInfo();
-        HardwareAbstractionLayer hal = si.getHardware();
-
-        this.jmsTemplate.convertAndSend(FormatUtil.formatBytes(hal.getMemory().getAvailable()));
+        metricBuildRepository.save(metric);
     }
 }

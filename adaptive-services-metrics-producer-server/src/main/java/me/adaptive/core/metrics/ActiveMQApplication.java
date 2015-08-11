@@ -18,18 +18,20 @@ package me.adaptive.core.metrics;
 
 import me.adaptive.core.data.config.JpaConfiguration;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.command.ActiveMQQueue;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.jms.annotation.EnableJms;
-import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.connection.CachingConnectionFactory;
-
-import javax.jms.ConnectionFactory;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableJms
+@EnableScheduling
 @Configuration
 @Import(JpaConfiguration.class)
 @SpringBootApplication
@@ -40,25 +42,27 @@ public class ActiveMQApplication {
     }
 
     @Bean(name = "amqConnectionFactory")
-    public ActiveMQConnectionFactory activeMQConnectionFactory() {
-        return new ActiveMQConnectionFactory("tcp://127.0.0.1:61616");
+    public ActiveMQConnectionFactory amqConnectionFactory() {
+        return new ActiveMQConnectionFactory("tcp://my.adaptive.me/q");
     }
 
     @Bean(name = "connectionFactory")
-    public CachingConnectionFactory cachingConnectionFactory() {
-        return new CachingConnectionFactory(activeMQConnectionFactory());
+    public CachingConnectionFactory connectionFactory() {
+        return new CachingConnectionFactory(amqConnectionFactory());
     }
 
-    @Bean(name = "jmsListenerContainerFactory")
-    public DefaultJmsListenerContainerFactory defaultJmsListenerContainerFactory() {
-
-        DefaultJmsListenerContainerFactory defaultJmsListenerContainerFactory =
-                new DefaultJmsListenerContainerFactory();
-
-        defaultJmsListenerContainerFactory.setConcurrency("3-10");
-        defaultJmsListenerContainerFactory.setConnectionFactory(cachingConnectionFactory());
-
-        return defaultJmsListenerContainerFactory;
+    @Bean(name = "defaultDestination")
+    public ActiveMQQueue defaultDestination() {
+        return new ActiveMQQueue("adaptive.metrics.queue.server");
     }
 
+    @Bean(name = "jmsTemplate")
+    public JmsTemplate jmsTemplate() {
+        JmsTemplate jmsTemplate = new JmsTemplate();
+
+        jmsTemplate.setConnectionFactory(connectionFactory());
+        jmsTemplate.setDefaultDestination(defaultDestination());
+
+        return jmsTemplate;
+    }
 }
