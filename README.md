@@ -23,7 +23,7 @@
 - ```tail -f target/adaptive-services-metrics-consumer-1.0.log```
 
 
-## adaptive-services-metrics-producer
+## adaptive-services-metrics-producer-server
 
 #### Pre-requisites
 - JDK 1.7+
@@ -33,15 +33,15 @@
 #### Installation & Start consumer
 
 
-- ```cd adaptive-services-metrics-producer```
+- ```cd adaptive-services-metrics-producer-server```
 - ```mvn clean package```
-- ```./adaptive-services-metrics-producer.sh start```
+- ```./adaptive-services-metrics-producer-server.sh start```
 
 #### Stop consumer
 
-- ```./adaptive-services-metrics-producer.sh stop```
+- ```./adaptive-services-metrics-producer-server.sh stop```
 
 #### Status and Logs
 
-- ```./adaptive-services-metrics-producer.sh status```
-- ```tail -f target/adaptive-services-metrics-producer-1.0.log```
+- ```./adaptive-services-metrics-producer-server.sh status```
+- ```tail -f target/adaptive-services-metrics-producer-server-1.0.log```
