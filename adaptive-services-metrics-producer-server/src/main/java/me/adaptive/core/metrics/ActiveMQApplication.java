@@ -43,7 +43,7 @@ public class ActiveMQApplication {
 
     @Bean(name = "amqConnectionFactory")
     public ActiveMQConnectionFactory amqConnectionFactory() {
-        return new ActiveMQConnectionFactory("tcp://my.adaptive.me/q");
+        return new ActiveMQConnectionFactory("tcp://my.adaptive.me:61616");
     }
 
     @Bean(name = "connectionFactory")
